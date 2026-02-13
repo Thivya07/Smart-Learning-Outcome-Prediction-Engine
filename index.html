@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Learning Outcome Prediction Engine</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts for Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">SLOPE</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#prediction">Predict</a></li>
+        </ul>
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Unlock Your Academic Potential</h1>
+            <p>Predict your learning outcomes with our AI-driven Smart Engine based on your performance metrics.</p>
+            <a href="#prediction" class="cta-button">Get Started</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2>About The Engine</h2>
+            <p> The Smart Learning Outcome Prediction Engine analyzes key performance indicators such as attendance,
+                internal marks, and assignment scores to forecast your academic trajectory. Designed for students and
+                educators to identify areas of improvement early.</p>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="section alt-bg">
+        <div class="container">
+            <h2>Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Real-time Analysis</h3>
+                    <p>Instant prediction based on your current data inputs.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Easy to Use</h3>
+                    <p>Simple interface designed for students of all levels.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Data-Driven</h3>
+                    <p>Uses weighted algorithms to ensure accurate outcome categorization.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prediction Section -->
+    <section id="prediction" class="section">
+        <div class="container">
+            <h2>Predict Your Outcome</h2>
+            <div class="prediction-wrapper">
+                <form id="prediction-form">
+                    <div class="form-group">
+                        <label for="name">Student Name</label>
+                        <input type="text" id="name" placeholder="Enter your full name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="attendance">Attendance (%)</label>
+                        <input type="number" id="attendance" min="0" max="100" placeholder="e.g. 85" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="marks">Internal Marks (Avg %)</label>
+                        <input type="number" id="marks" min="0" max="100" placeholder="e.g. 70" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="assignments">Assignment Score (0-10)</label>
+                        <input type="number" id="assignments" min="0" max="10" placeholder="e.g. 8" required>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="predict-btn">Analyze & Predict</button>
+                </form>
+
+                <div id="result-display" class="result-card hidden">
+                    <h3>Prediction Result</h3>
+                    <div id="loading" class="hidden">Running analysis...</div>
+                    <div id="outcome-content">
+                        <p>Hello <span id="res-name">Student</span>,</p>
+                        <p>Your predicted outcome is: <span id="res-outcome" class="outcome-badge">Good</span></p>
+                        <p id="res-feedback" class="feedback-text">Keep up the great work!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Smart Learning Outcome Prediction Engine. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

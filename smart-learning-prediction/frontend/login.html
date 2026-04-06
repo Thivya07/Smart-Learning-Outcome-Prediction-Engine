@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Smart Learning Engine</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .auth-container {
+            background: linear-gradient(135deg, var(--bg-main) 0%, #0f172a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Abstract Background Elements */
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .auth-container::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            right: -10%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .auth-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 3rem 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            border-radius: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-brand {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .auth-brand i {
+            width: 48px;
+            height: 48px;
+            color: var(--accent);
+            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.4));
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .auth-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .auth-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #cbd5e1;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            color: #64748b;
+            width: 18px;
+            height: 18px;
+            transition: color 0.3s ease;
+            pointer-events: none;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 2.75rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-input::placeholder {
+            color: #475569;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent);
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-input:focus + .input-icon,
+        .input-wrapper:focus-within .input-icon {
+            color: var(--accent);
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: none;
+            display: none; /* Make flex when showing */
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .error-message.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .form-input.error {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .auth-footer {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .auth-footer a {
+            color: var(--text-muted);
+            transition: color 0.2s ease;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .auth-footer a:hover {
+            color: var(--text-primary);
+        }
+
+        .auth-footer a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--text-primary);
+            transform-origin: bottom right;
+            transition: transform 0.25s ease-out;
+        }
+
+        .auth-footer a:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        .footer-divider {
+            width: 100%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .footer-divider span {
+            background: #1e293b;
+            padding: 0 1rem;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-loading .spinner { display: inline-block; }
+        .btn-loading .btn-text { display: none; }
+        .btn-loading i { display: none; }
+
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-brand">
+                <i data-lucide="brain-circuit"></i>
+            </div>
+            
+            <div class="auth-header">
+                <h1>Welcome Back</h1>
+                <p>Smart Learning Outcome Prediction Engine</p>
+            </div>
+
+            <form id="loginForm" novalidate>
+                <div class="form-group">
+                    <label class="form-label" for="email">Faculty Email</label>
+                    <div class="input-wrapper">
+                        <i data-lucide="mail" class="input-icon"></i>
+                        <input type="email" id="email" class="form-input" placeholder="faculty@university.edu" autocomplete="email">
+                    </div>
+                    <div class="error-message" id="emailError">
+                        <i data-lucide="alert-circle" style="width: 14px; height: 14px;"></i>
+                        <span class="text">Please enter a valid email address.</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i data-lucide="lock" class="input-icon"></i>
+                        <input type="password" id="password" class="form-input" placeholder="••••••••" autocomplete="current-password">
+                    </div>
+                    <div class="error-message" id="passwordError">
+                        <i data-lucide="alert-circle" style="width: 14px; height: 14px;"></i>
+                        <span class="text">Password is required.</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="loginBtn">
+                    <span class="btn-text">Sign In to Dashboard</span>
+                    <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+                    <div class="spinner"></div>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <a href="#">Forgot Password?</a>
+                
+                <div class="footer-divider">
+                    <span>OR</span>
+                </div>
+                
+                <a href="student-login.html" style="color: var(--accent);">Student Login</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const emailError = document.getElementById('emailError');
+            const passwordError = document.getElementById('passwordError');
+            const loginBtn = document.getElementById('loginBtn');
+
+            // Basic email validation regex
+            const isValidEmail = (email) => {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            };
+
+            const showError = (inputElement, errorElement, message) => {
+                inputElement.classList.add('error');
+                errorElement.querySelector('.text').textContent = message;
+                errorElement.classList.add('show');
+            };
+
+            const hideError = (inputElement, errorElement) => {
+                inputElement.classList.remove('error');
+                errorElement.classList.remove('show');
+            };
+
+            // Remove error styling on input
+            emailInput.addEventListener('input', () => hideError(emailInput, emailError));
+            passwordInput.addEventListener('input', () => hideError(passwordInput, passwordError));
+
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let hasError = false;
+
+                // Validate Email
+                if (!emailInput.value.trim()) {
+                    showError(emailInput, emailError, 'Email address is required.');
+                    hasError = true;
+                } else if (!isValidEmail(emailInput.value)) {
+                    showError(emailInput, emailError, 'Please enter a valid university email.');
+                    hasError = true;
+                }
+
+                // Validate Password
+                if (!passwordInput.value.trim()) {
+                    showError(passwordInput, passwordError, 'Password is required.');
+                    hasError = true;
+                }
+
+                if (!hasError) {
+                    // Call backend API for login
+                    loginBtn.classList.add('btn-loading');
+                    loginBtn.disabled = true;
+
+                    fetch('http://localhost:8080/api/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            email: emailInput.value.trim(),
+                            password: passwordInput.value.trim()
+                        })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Invalid email or password');
+                        }
+                    })
+                    .then(data => {
+                        // Success -> save auth state if needed and redirect
+                        localStorage.setItem('facultyId', data.facultyId);
+                        window.location.href = 'dashboard.html';
+                    })
+                    .catch(error => {
+                        showError(emailInput, emailError, error.message);
+                        loginBtn.classList.remove('btn-loading');
+                        loginBtn.disabled = false;
+                    });
+                } else {
+                    // Add a tiny shake animation to the button if there are errors
+                    loginBtn.style.transform = 'translate(4px)';
+                    setTimeout(() => loginBtn.style.transform = 'translate(-4px)', 100);
+                    setTimeout(() => loginBtn.style.transform = 'translate(4px)', 200);
+                    setTimeout(() => loginBtn.style.transform = 'translate(0)', 300);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

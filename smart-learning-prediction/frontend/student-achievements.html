@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievements - Smart Learning Engine</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .badge-card {
+            background: linear-gradient(180deg, rgba(30, 41, 59, 1) 0%, rgba(15, 23, 42, 1) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .badge-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%);
+            transform: rotate(45deg);
+            pointer-events: none;
+        }
+
+        .badge-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .icon-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 0 30px;
+            position: relative;
+        }
+
+        .icon-circle::after {
+            content: '';
+            position: absolute;
+            top: -10px; left: -10px; right: -10px; bottom: -10px;
+            border-radius: 50%;
+            border: 2px dashed rgba(255,255,255,0.2);
+            animation: spin 10s linear infinite;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Badge Colors */
+        .badge-gold .icon-circle { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; box-shadow: 0 0 40px rgba(245, 158, 11, 0.4); }
+        .badge-gold .badge-title { color: #fbbf24; }
+        
+        .badge-emerald .icon-circle { background: linear-gradient(135deg, #34d399, #10b981); color: #fff; box-shadow: 0 0 40px rgba(16, 185, 129, 0.4); }
+        .badge-emerald .badge-title { color: #34d399; }
+        
+        .badge-sapphire .icon-circle { background: linear-gradient(135deg, #60a5fa, #3b82f6); color: #fff; box-shadow: 0 0 40px rgba(59, 130, 246, 0.4); }
+        .badge-sapphire .badge-title { color: #60a5fa; }
+        
+        .badge-amethyst .icon-circle { background: linear-gradient(135deg, #c084fc, #9333ea); color: #fff; box-shadow: 0 0 40px rgba(147, 51, 234, 0.4); }
+        .badge-amethyst .badge-title { color: #c084fc; }
+
+        .badge-locked { filter: grayscale(100%) opacity(0.5); pointer-events: none; }
+        .badge-locked::after {
+            content: 'Locked';
+            position: absolute;
+            bottom: 1rem; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .badge-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .leaderboard-section {
+            margin-top: 4rem;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .leaderboard-table th {
+            text-align: left;
+            padding: 1rem;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .leaderboard-table td {
+            padding: 1.25rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.95rem;
+            color: #fff;
+            vertical-align: middle;
+        }
+
+        .leaderboard-table tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .rank-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.9rem;
+        }
+
+        .rank-1 { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; box-shadow: 0 0 15px rgba(245, 158, 11, 0.5); }
+        .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; box-shadow: 0 0 15px rgba(148, 163, 184, 0.5); }
+        .rank-3 { background: linear-gradient(135deg, #b45309, #78350f); color: #fff; box-shadow: 0 0 15px rgba(180, 83, 9, 0.5); }
+        
+        .user-row { background: rgba(59, 130, 246, 0.05); border-left: 3px solid #3b82f6; }
+        .user-row:hover { background: rgba(59, 130, 246, 0.1); }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i data-lucide="graduation-cap" style="color: #10b981;"></i>
+                Smart Learning Engine
+            </div>
+            <nav class="sidebar-nav">
+                <a href="student-dashboard.html" class="nav-item">
+                    <i data-lucide="layout-dashboard"></i> My Dashboard
+                </a>
+                <a href="student-courses.html" class="nav-item">
+                    <i data-lucide="book-open"></i> My Courses
+                </a>
+                <a href="student-achievements.html" class="nav-item active">
+                    <i data-lucide="award"></i> Achievements
+                </a>
+                <a href="student-profile.html" class="nav-item">
+                    <i data-lucide="user"></i> Profile
+                </a>
+            </nav>
+            <div style="margin-top: auto;">
+                <a href="#" id="logoutBtn" class="nav-item">
+                    <i data-lucide="log-out"></i> Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header" style="align-items: flex-end;">
+                <div>
+                    <h2>Trophy Room</h2>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Showcase your academic milestones and predictive standing.</p>
+                </div>
+                <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); padding: 0.75rem 1.5rem; border-radius: 12px; display: flex; align-items: center; gap: 1rem;">
+                    <div>
+                        <div style="font-size: 0.75rem; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.05em; font-weight: bold;">Total XP</div>
+                        <div style="font-size: 1.5rem; font-weight: 800; color: #fff;" id="xpPoints">0</div>
+                    </div>
+                    <i data-lucide="zap" style="color: #fbbf24; width: 32px; height: 32px;"></i>
+                </div>
+            </div>
+
+            <!-- Badges Grid -->
+            <div class="achievements-grid" id="badgesContainer">
+                <!-- Populated dynamically via JS -->
+            </div>
+
+            <!-- Leaderboard -->
+            <div class="leaderboard-section">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="font-size: 1.25rem;">Global Cohort Leaderboard</h3>
+                    <div style="font-size: 0.85rem; color: var(--text-muted);">Top Students Predictively</div>
+                </div>
+
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Student</th>
+                            <th>Department</th>
+                            <th>Predicted Outcome %</th>
+                            <th>Badge</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const studentId = localStorage.getItem('studentId');
+            if (!studentId) { window.location.href = 'student-login.html'; return; }
+
+            document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.clear();
+                window.location.href = 'student-login.html';
+            });
+
+            try {
+                // Fetch student's own data
+                const response = await fetch(`http://localhost:8080/api/students/${studentId}`);
+                if (!response.ok) throw new Error("Could not load profile");
+                const me = await response.json();
+
+                // Compute prediction score locally for UX speed (or fetch /predict)
+                const mockPrediction = (s) => Math.min(100, Math.round(((s.cgpa||0)*20) + ((s.utScore||0)*0.4) + ((s.assessmentScore||0)*0.4)));
+                const myScore = mockPrediction(me);
+                
+                // Set XP
+                document.getElementById('xpPoints').textContent = Math.round(myScore * 14.5 + (me.cgpa*100));
+
+                // Determine Badges
+                const badges = [
+                    {
+                        id: 'deans', title: "Dean's List Eligible",
+                        desc: "Achieved an excellent predictive learning outcome above 85%.",
+                        icon: "award", color: "badge-gold",
+                        unlocked: myScore >= 85
+                    },
+                    {
+                        id: 'consistent', title: "Consistent Coder",
+                        desc: "Maintained a high unit test average over multiple assessments.",
+                        icon: "terminal-square", color: "badge-sapphire",
+                        unlocked: me.utScore >= 80
+                    },
+                    {
+                        id: 'assessment', title: "Assessment Ace",
+                        desc: "Scored perfectly on critical milestones.",
+                        icon: "check-circle", color: "badge-emerald",
+                        unlocked: me.assessmentScore >= 90
+                    },
+                    {
+                        id: 'gpa', title: "4.0 Club",
+                        desc: "Reached the pinnacle of specific CGPA requirements.",
+                        icon: "star", color: "badge-amethyst",
+                        unlocked: me.cgpa >= 3.9
+                    }
+                ];
+
+                const badgeContainer = document.getElementById('badgesContainer');
+                badges.forEach(b => {
+                    const card = document.createElement('div');
+                    card.className = `badge-card ${b.color} ${b.unlocked ? '' : 'badge-locked'}`;
+                    card.innerHTML = `
+                        <div class="icon-circle">
+                            <i data-lucide="${b.icon}" style="width: 48px; height: 48px;"></i>
+                        </div>
+                        <h4 class="badge-title">${b.title}</h4>
+                        <p class="badge-desc">${b.desc}</p>
+                    `;
+                    badgeContainer.appendChild(card);
+                });
+
+                // Fetch Leaderboard logic
+                const allStudentsRes = await fetch(`http://localhost:8080/api/students`);
+                if(allStudentsRes.ok) {
+                    const allStudents = await allStudentsRes.json();
+                    
+                    // Sort by highest score
+                    const leaderboard = allStudents
+                        .map(s => ({ ...s, score: mockPrediction(s) }))
+                        .sort((a,b) => b.score - a.score)
+                        .slice(0, 5); // top 5
+                    
+                    const tbody = document.getElementById('leaderboardBody');
+                    leaderboard.forEach((user, index) => {
+                        const tr = document.createElement('tr');
+                        const isMe = user.id.toString() === studentId;
+                        if(isMe) tr.className = 'user-row';
+
+                        let rankEl = `<span>${index + 1}</span>`;
+                        if(index === 0) rankEl = `<div class="rank-icon rank-1"><i data-lucide="crown" style="width: 16px;"></i></div>`;
+                        else if(index === 1) rankEl = `<div class="rank-icon rank-2">2</div>`;
+                        else if(index === 2) rankEl = `<div class="rank-icon rank-3">3</div>`;
+
+                        let statusBadge = user.score >= 80 ? '<span style="color: #10b981;">Exceptional</span>' : (user.score >= 60 ? '<span style="color: #f59e0b;">Average</span>' : '<span style="color: #ef4444;">At Risk</span>');
+
+                        tr.innerHTML = `
+                            <td>${rankEl}</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="width: 32px; height: 32px; border-radius: 50%; background: ${isMe ? '#3b82f6' : 'rgba(255,255,255,0.1)'}; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">
+                                        ${user.name.charAt(0).toUpperCase()}
+                                    </div>
+                                    <span style="font-weight: 600; color: ${isMe ? '#60a5fa' : '#fff'};">${user.name} ${isMe ? '(You)' : ''}</span>
+                                </div>
+                            </td>
+                            <td style="color: var(--text-muted);">${user.department}</td>
+                            <td style="font-weight: bold; font-size: 1.1rem; color: #fff;">${user.score}%</td>
+                            <td>${statusBadge}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+                
+                lucide.createIcons();
+            } catch(e) { console.error("Error loading achievements:", e); }
+        });
+    </script>
+</body>
+</html>
